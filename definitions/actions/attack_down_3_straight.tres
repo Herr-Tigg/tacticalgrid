@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ActionDefinition" load_steps=2 format=3 uid="uid://drmhfs7euille"]
+
+[ext_resource type="Script" uid="uid://df3hwh3mqg4sm" path="res://scripts/definitions/action_definition.gd" id="1_wxad2"]
+
+[resource]
+script = ExtResource("1_wxad2")
+type = 1
+mode = 1
+path = Array[Vector2i]([Vector2i(0, 1), Vector2i(0, 2), Vector2i(0, 3)])
+metadata/_custom_type_script = "uid://df3hwh3mqg4sm"

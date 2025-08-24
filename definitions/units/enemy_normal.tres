@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://d0kwwp31ll67"]
+
+[ext_resource type="Script" uid="uid://df3hwh3mqg4sm" path="res://scripts/definitions/action_definition.gd" id="1_5lfmt"]
+[ext_resource type="Resource" uid="uid://ce6jvbvampist" path="res://definitions/actions/attack_left_3_straight.tres" id="2_fyubf"]
+[ext_resource type="Resource" uid="uid://bqfe6sb7eshk4" path="res://definitions/actions/left_3_straight.tres" id="2_tw2w6"]
+[ext_resource type="Resource" uid="uid://bgnllquw4nww" path="res://definitions/actions/up_3_straight.tres" id="3_5enqj"]
+[ext_resource type="Resource" uid="uid://baru3k83r7djs" path="res://definitions/actions/attack_right_3_straight.tres" id="3_diggv"]
+[ext_resource type="Resource" uid="uid://chu7had17aetb" path="res://definitions/actions/right_3_straight.tres" id="4_fyubf"]
+[ext_resource type="Resource" uid="uid://drmhfs7euille" path="res://definitions/actions/attack_down_3_straight.tres" id="4_stwvu"]
+[ext_resource type="Resource" uid="uid://ow1v0guxkjv5" path="res://definitions/actions/down_3_straight.tres" id="5_diggv"]
+[ext_resource type="Resource" uid="uid://8njuwsxli0l" path="res://definitions/actions/attack_up_3_straight.tres" id="5_fo566"]
+[ext_resource type="Script" uid="uid://qhju30ovreiy" path="res://scripts/definitions/unit_definition.gd" id="6_stwvu"]
+[ext_resource type="SpriteFrames" uid="uid://dp28viw4oqpat" path="res://animations/deathslime.tres" id="7_tw2w6"]
+[ext_resource type="Resource" uid="uid://qkq703pirmal" path="res://definitions/actions/stand_still.tres" id="10_fo566"]
+
+[resource]
+script = ExtResource("6_stwvu")
+faction = 1
+max_health = 100
+speed = 80
+damage = 25
+movements = Array[ExtResource("1_5lfmt")]([ExtResource("2_tw2w6"), ExtResource("3_5enqj"), ExtResource("4_fyubf"), ExtResource("5_diggv"), ExtResource("10_fo566")])
+attack_patterns = Array[ExtResource("1_5lfmt")]([ExtResource("2_fyubf"), ExtResource("3_diggv"), ExtResource("4_stwvu"), ExtResource("5_fo566")])
+sprite_frames = ExtResource("7_tw2w6")
+metadata/_custom_type_script = "uid://qhju30ovreiy"

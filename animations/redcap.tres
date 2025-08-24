@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://bqruatded1qpr"]
+
+[ext_resource type="Texture2D" uid="uid://cruk0kinplgox" path="res://assets/RedCap.png" id="1_mk0xj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mvtoq"]
+atlas = ExtResource("1_mk0xj")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ayrsv"]
+atlas = ExtResource("1_mk0xj")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l2qaw"]
+atlas = ExtResource("1_mk0xj")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mquma"]
+atlas = ExtResource("1_mk0xj")
+region = Rect2(48, 0, 16, 16)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mvtoq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ayrsv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l2qaw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mquma")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]

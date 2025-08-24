@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://dp28viw4oqpat"]
+
+[ext_resource type="Texture2D" uid="uid://cpt3bt4jjx8cg" path="res://assets/DeathSlime.png" id="1_71ceu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tvi6e"]
+atlas = ExtResource("1_71ceu")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5su4m"]
+atlas = ExtResource("1_71ceu")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dj7wo"]
+atlas = ExtResource("1_71ceu")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ushl1"]
+atlas = ExtResource("1_71ceu")
+region = Rect2(48, 0, 16, 16)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tvi6e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5su4m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dj7wo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ushl1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]

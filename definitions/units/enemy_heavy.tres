@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://ctcaccl5ar1fw"]
+
+[ext_resource type="Script" uid="uid://df3hwh3mqg4sm" path="res://scripts/definitions/action_definition.gd" id="1_an4gd"]
+[ext_resource type="Resource" uid="uid://4gr5upldgemd" path="res://definitions/actions/left_1_straight.tres" id="2_an4gd"]
+[ext_resource type="Resource" uid="uid://1pxic3nxkga6" path="res://definitions/actions/up_1_straight.tres" id="3_gk2w3"]
+[ext_resource type="Resource" uid="uid://vaitlbtnm1xx" path="res://definitions/actions/right_1_straight.tres" id="4_ube3k"]
+[ext_resource type="Resource" uid="uid://bp6qqlmloanux" path="res://definitions/actions/down_1_straight.tres" id="5_y8kc5"]
+[ext_resource type="Resource" uid="uid://xdln84imcav5" path="res://definitions/actions/down_left_1.tres" id="6_ildqq"]
+[ext_resource type="Script" uid="uid://qhju30ovreiy" path="res://scripts/definitions/unit_definition.gd" id="6_th3sa"]
+[ext_resource type="Resource" uid="uid://qppbad1781dh" path="res://definitions/actions/down_right_1.tres" id="7_th3sa"]
+[ext_resource type="Resource" uid="uid://bg211kt41kr7e" path="res://definitions/actions/up_left_1.tres" id="8_pi1f8"]
+[ext_resource type="Resource" uid="uid://bjjoc6trwulqh" path="res://definitions/actions/up_right_1.tres" id="9_hc5wl"]
+[ext_resource type="Resource" uid="uid://qkq703pirmal" path="res://definitions/actions/stand_still.tres" id="10_pi1f8"]
+[ext_resource type="SpriteFrames" uid="uid://c64gbxdf3bois" path="res://animations/brawnyogre.tres" id="11_th3sa"]
+
+[resource]
+script = ExtResource("6_th3sa")
+faction = 1
+max_health = 140
+speed = 60
+damage = 25
+movements = Array[ExtResource("1_an4gd")]([ExtResource("2_an4gd"), ExtResource("3_gk2w3"), ExtResource("4_ube3k"), ExtResource("5_y8kc5"), ExtResource("6_ildqq"), ExtResource("7_th3sa"), ExtResource("8_pi1f8"), ExtResource("9_hc5wl"), ExtResource("10_pi1f8")])
+attack_patterns = Array[ExtResource("1_an4gd")]([])
+sprite_frames = ExtResource("11_th3sa")
+metadata/_custom_type_script = "uid://qhju30ovreiy"

@@ -1,0 +1,62 @@
+[gd_scene load_steps=11 format=3 uid="uid://cuo4ypjlcehm3"]
+
+[ext_resource type="Script" uid="uid://be466gkjkmna4" path="res://scripts/level.gd" id="1_w7c3h"]
+[ext_resource type="Resource" uid="uid://fhorrmywblux" path="res://definitions/levels/level_rect_1.tres" id="2_2r41h"]
+[ext_resource type="PackedScene" uid="uid://cjpryeq0xlpgr" path="res://scenes/maps/map_small_rect.tscn" id="2_mx8sn"]
+[ext_resource type="Script" uid="uid://clqwhg73noaxj" path="res://scripts/map_effects.gd" id="4_2r41h"]
+[ext_resource type="Texture2D" uid="uid://1euoq0d61rxy" path="res://assets/tiles/highlights16px.png" id="4_b121j"]
+[ext_resource type="Script" uid="uid://0pxmkapb37d3" path="res://scripts/units.gd" id="4_mx8sn"]
+[ext_resource type="Script" uid="uid://q22bcd8ajmyc" path="res://scripts/level_ui.gd" id="7_b121j"]
+[ext_resource type="FontFile" uid="uid://c36j7lnc48u02" path="res://assets/fonts/pixelated-elegance-font/PixelatedEleganceRegular-ovyAA.ttf" id="7_klq6b"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b121j"]
+texture = ExtResource("4_b121j")
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+0:0/0 = 0
+5:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_klq6b"]
+sources/0 = SubResource("TileSetAtlasSource_b121j")
+
+[node name="Level" type="Node" node_paths=PackedStringArray("level_ui", "map_effects", "unit_container")]
+script = ExtResource("1_w7c3h")
+level_def = ExtResource("2_2r41h")
+level_ui = NodePath("LevelUI")
+map_effects = NodePath("Map effects")
+unit_container = NodePath("Units")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(5, 5)
+
+[node name="HighlightLayer" parent="." instance=ExtResource("2_mx8sn")]
+z_index = 5
+tile_map_data = PackedByteArray()
+tile_set = SubResource("TileSet_klq6b")
+
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="Map effects" type="Node2D" parent="."]
+script = ExtResource("4_2r41h")
+
+[node name="Units" type="Node2D" parent="."]
+script = ExtResource("4_mx8sn")
+
+[node name="TurnTimer" type="Timer" parent="."]
+
+[node name="LevelUI" type="Node2D" parent="."]
+script = ExtResource("7_b121j")
+
+[node name="TimerLabel" type="Label" parent="LevelUI"]
+z_index = 100
+offset_left = -10.0
+offset_top = -62.0
+offset_right = 18.0
+offset_bottom = -45.0
+scale = Vector2(0.7, 0.7)
+theme_override_fonts/font = ExtResource("7_klq6b")
+text = "10"
+horizontal_alignment = 1
+vertical_alignment = 1

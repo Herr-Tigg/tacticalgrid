@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=13 format=3 uid="uid://b8nq1qg4be60h"]
+
+[ext_resource type="Script" uid="uid://df3hwh3mqg4sm" path="res://scripts/definitions/action_definition.gd" id="1_vwpdh"]
+[ext_resource type="Resource" uid="uid://bqfe6sb7eshk4" path="res://definitions/actions/left_3_straight.tres" id="2_1vk7q"]
+[ext_resource type="Script" uid="uid://qhju30ovreiy" path="res://scripts/definitions/unit_definition.gd" id="2_kvmi7"]
+[ext_resource type="Resource" uid="uid://bgnllquw4nww" path="res://definitions/actions/up_3_straight.tres" id="3_bheb3"]
+[ext_resource type="Resource" uid="uid://chu7had17aetb" path="res://definitions/actions/right_3_straight.tres" id="4_y4hcq"]
+[ext_resource type="Resource" uid="uid://ow1v0guxkjv5" path="res://definitions/actions/down_3_straight.tres" id="5_72qy8"]
+[ext_resource type="Resource" uid="uid://xdln84imcav5" path="res://definitions/actions/down_left_1.tres" id="6_bheb3"]
+[ext_resource type="Resource" uid="uid://qppbad1781dh" path="res://definitions/actions/down_right_1.tres" id="7_g05o6"]
+[ext_resource type="Resource" uid="uid://bg211kt41kr7e" path="res://definitions/actions/up_left_1.tres" id="8_janb8"]
+[ext_resource type="Resource" uid="uid://bjjoc6trwulqh" path="res://definitions/actions/up_right_1.tres" id="9_o8cg0"]
+[ext_resource type="Resource" uid="uid://qkq703pirmal" path="res://definitions/actions/stand_still.tres" id="10_o8cg0"]
+[ext_resource type="SpriteFrames" uid="uid://bqruatded1qpr" path="res://animations/redcap.tres" id="11_janb8"]
+
+[resource]
+script = ExtResource("2_kvmi7")
+faction = 0
+max_health = 100
+speed = 75
+damage = 25
+movements = Array[ExtResource("1_vwpdh")]([ExtResource("2_1vk7q"), ExtResource("3_bheb3"), ExtResource("4_y4hcq"), ExtResource("5_72qy8"), ExtResource("6_bheb3"), ExtResource("7_g05o6"), ExtResource("8_janb8"), ExtResource("9_o8cg0"), ExtResource("10_o8cg0")])
+attack_patterns = Array[ExtResource("1_vwpdh")]([])
+sprite_frames = ExtResource("11_janb8")
+metadata/_custom_type_script = "uid://qhju30ovreiy"

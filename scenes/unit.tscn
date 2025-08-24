@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bd5ijdwra1k1x"]
+
+[ext_resource type="Script" uid="uid://cg1t5dnm8u50x" path="res://scripts/unit.gd" id="1_k673f"]
+[ext_resource type="Texture2D" uid="uid://bfgjkypd6kg54" path="res://assets/ui/healthbars16px.png" id="2_k673f"]
+
+[node name="Unit" type="Node2D" node_paths=PackedStringArray("animated_sprite", "health_bar_sprite")]
+z_index = 10
+script = ExtResource("1_k673f")
+animated_sprite = NodePath("AnimatedSprite2D")
+health_bar_sprite = NodePath("Healthbar")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 5
+autoplay = "default"
+
+[node name="HealthbarFrame" type="Sprite2D" parent="."]
+position = Vector2(-8, 9)
+texture = ExtResource("2_k673f")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 4)
+
+[node name="Healthbar" type="Sprite2D" parent="."]
+position = Vector2(-7, 9)
+texture = ExtResource("2_k673f")
+centered = false
+region_enabled = true
+region_rect = Rect2(17, 0, 14, 4)

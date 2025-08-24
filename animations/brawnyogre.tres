@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://c64gbxdf3bois"]
+
+[ext_resource type="Texture2D" uid="uid://baf35fmmijo10" path="res://assets/BrawnyOgre.png" id="1_a2xmm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3aodo"]
+atlas = ExtResource("1_a2xmm")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g5jev"]
+atlas = ExtResource("1_a2xmm")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y30je"]
+atlas = ExtResource("1_a2xmm")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8eab"]
+atlas = ExtResource("1_a2xmm")
+region = Rect2(48, 0, 16, 16)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3aodo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g5jev")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y30je")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8eab")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
