@@ -1,4 +1,4 @@
-class_name LevelUI extends Node2D
+class_name LevelUI extends CanvasLayer
 
 @onready var timer_label: Label = $TimerLabel
 
