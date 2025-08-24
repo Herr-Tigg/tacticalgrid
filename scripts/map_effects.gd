@@ -9,9 +9,47 @@ const ATLAS_COORDS_SELECTABLE := Vector2i(3, 0)
 const ATLAS_COORDS_BLOCKED := Vector2i(4, 0)
 const ATLAS_COORDS_ATTACK := Vector2i(5, 0)
 
+class CameraShake:
+	var shake_speed: float = 200.0
+	var shake_strength: float = 3.0
+	var shake_decay_rate: float = 3.0
+	
+	var camera: Camera2D
+	
+	var active: bool = false
+	var noise: FastNoiseLite
+	var noise_i: float = 0.0
+	var current_shake_strength: float = 0.0
+	
+	func _init(new_camera: Camera2D) -> void:
+		camera = new_camera
+		noise = FastNoiseLite.new()
+		noise.seed = randi()
+		
+	func start() -> void:
+		current_shake_strength = shake_strength
+		active = true
+		
+	func shake_if_active(delta: float) -> void:
+		if not active: return
+		
+		current_shake_strength = lerp(current_shake_strength, 0.0, shake_decay_rate * delta)
+		noise_i += shake_speed * delta
+		
+		camera.offset = Vector2(
+			noise.get_noise_2d(1, noise_i) * current_shake_strength,
+			noise.get_noise_2d(100, noise_i) * current_shake_strength,
+		)
+		
+	func end() -> void:
+		camera.offset = Vector2.ZERO
+		active = false
+		
+	
+
 var highlight_layer: TileMapLayer
 var move_indicator_sprite: Sprite2D
-
+var camera_shake: CameraShake
 var current_state: State
 var current_cell: Vector2i = Vector2i(INF, INF)
 var current_unit: Unit
@@ -23,6 +61,8 @@ func _ready() -> void:
 	EventBus.move_selected.connect(on_move_selected)
 	EventBus.attack_selected.connect(on_attack_selected)
 	EventBus.selection_acknowledged.connect(on_selection_acknowledged)
+	EventBus.attack_started.connect(on_attack_started)
+	EventBus.attack_ended.connect(on_attack_ended)
 	EventBus.turn_completed.connect(on_turn_completed)
 	
 	move_indicator_sprite = Sprite2D.new()
@@ -30,11 +70,17 @@ func _ready() -> void:
 	move_indicator_sprite.self_modulate.a = 0.6
 	add_child(move_indicator_sprite)
 	
-func init(tile_map: TileMapLayer, new_highlight_layer: TileMapLayer) -> void:
-	highlight_layer = new_highlight_layer
+
+func init(
+	tile_map: TileMapLayer,
+	highlight_layer_instance: TileMapLayer,
+	camera: Camera2D,
+) -> void:
+	highlight_layer = highlight_layer_instance
 	for cell in tile_map.get_used_cells():
 		highlight_layer.set_cell(cell, SOURCE_ID, ATLAS_COORDS_NULL)
 	
+	camera_shake = CameraShake.new(camera)
 	current_state = State.WAITING
 	
 
@@ -81,6 +127,15 @@ func on_attack_selected(cell: Vector2i) -> void:
 
 func on_selection_acknowledged() -> void:
 	update_state(State.WAITING)
+	
+
+func on_attack_started() -> void:
+	camera_shake.start()
+	
+
+func on_attack_ended(_attacker: Unit, _target_cell: Vector2i) -> void:
+	camera_shake.end()
+	
 
 func on_turn_completed(_unit: Unit) -> void:
 	update_state(State.WAITING)
@@ -115,10 +170,13 @@ func handle_hover(new_cell: Vector2i) -> void:
 	current_cell = new_cell
 	
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var new_cell := Navigation.world_to_cell(get_global_mouse_position())
-	if current_state not in [State.SELECT_MOVE, State.SELECT_ATTACK] or new_cell == current_cell: return
-	handle_hover(new_cell)
+	
+	if current_state in [State.SELECT_MOVE, State.SELECT_ATTACK] and new_cell != current_cell:
+		handle_hover(new_cell)
+	
+	camera_shake.shake_if_active(delta)
 	
 
 #endregion

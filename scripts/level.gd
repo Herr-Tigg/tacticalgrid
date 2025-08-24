@@ -15,7 +15,7 @@ func _ready() -> void:
 	
 	Navigation.init(tile_map)
 	level_ui.init(turn_timer)
-	map_effects.init(tile_map, highlight_layer)
+	map_effects.init(tile_map, highlight_layer, camera)
 	unit_container.init(level_def, turn_timer)
 	GlobalData.init(unit_container)
 	unit_container.start_round()

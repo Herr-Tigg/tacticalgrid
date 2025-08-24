@@ -10,7 +10,7 @@
 script = ExtResource("5_sidqn")
 map_to_load = ExtResource("3_i0g8l")
 friendly_units = Array[ExtResource("1_dqtuo")]([ExtResource("2_q5pt3")])
-friendly_spawn_cells = Array[Vector2i]([Vector2i(-4, -2)])
+friendly_spawn_cells = Array[Vector2i]([Vector2i(-2, -1)])
 opponent_units = Array[ExtResource("1_dqtuo")]([ExtResource("4_s4vao")])
-opponent_spawn_cells = Array[Vector2i]([Vector2i(3, 1)])
+opponent_spawn_cells = Array[Vector2i]([Vector2i(2, -1)])
 metadata/_custom_type_script = "uid://bxpn3ws07q07r"

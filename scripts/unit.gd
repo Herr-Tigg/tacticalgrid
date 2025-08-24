@@ -51,11 +51,17 @@ var movements: Array[ActionDefinition]
 var attack_patterns: Array[ActionDefinition]
 var sprite_frames: SpriteFrames
 
+var timer: Timer
 var current_state: State
 var turn: Turn
 var opposing_faction: UnitDefinition.Faction
 var current_health: int
 var current_cell: Vector2i
+
+func _ready() -> void:
+	timer = Timer.new()
+	timer.one_shot = true
+	add_child(timer)
 
 func init(spawn_cell: Vector2i, unit_def: UnitDefinition, turn_timer: Timer) -> void:
 	faction = unit_def.faction
@@ -122,7 +128,8 @@ func update_state(new_state: State) -> void:
 				if turn.attack_cell.x < current_cell.x: animated_sprite.flip_h = true
 				elif turn.attack_cell.x > current_cell.x: animated_sprite.flip_h = false
 				
-				EventBus.attack_ended.emit(self, turn.attack_cell)
+				timer.start(1.0)
+				EventBus.attack_started.emit()
 			else: update_state(State.WAITING)
 		State.DYING:
 			unit_dead.emit(self)
@@ -184,6 +191,9 @@ func move(delta: float) -> void:
 
 func attack(_delta: float) -> void:
 	'''No per-frame attack logic for now -> Simply finish the turn.'''
+	if not timer.is_stopped(): return
+	
+	EventBus.attack_ended.emit(self, turn.attack_cell)
 	update_state(State.WAITING)
 	
 
