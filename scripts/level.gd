@@ -1,4 +1,4 @@
-extends Node
+class_name Level extends Node
 
 @onready var camera: Camera2D = $Camera2D
 @onready var highlight_layer: TileMapLayer = $HighlightLayer

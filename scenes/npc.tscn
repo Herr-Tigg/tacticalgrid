@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwbygkwhnh1t"]
+
+[ext_resource type="PackedScene" uid="uid://bd5ijdwra1k1x" path="res://scenes/unit.tscn" id="1_nh2m4"]
+
+[node name="NPC" type="Node2D"]
+
+[node name="Unit" parent="." instance=ExtResource("1_nh2m4")]
+movement_speed = null

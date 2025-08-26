@@ -48,11 +48,15 @@ class CameraShake:
 	
 
 var highlight_layer: TileMapLayer
+var highlights_enabled: bool = false
 var move_indicator_sprite: Sprite2D
 var camera_shake: CameraShake
 var current_state: State
 var current_cell: Vector2i = Vector2i(INF, INF)
 var current_unit: Unit
+
+var traversable_cells: Array[Vector2i] = []
+var attackable_cells: Array[Vector2i] = []
 var selected_move_cell: Vector2i
 var selected_attack_cell: Vector2i
 
@@ -94,15 +98,18 @@ func update_state(new_state: State) -> void:
 	match new_state:
 		State.WAITING: pass
 		State.SELECT_MOVE:
-			for cell in current_unit.get_traversable_cells():
+			if not highlights_enabled: return
+			for cell in traversable_cells:
 				highlight_layer.set_cell(cell, SOURCE_ID, ATLAS_COORDS_SELECTABLE)
 			handle_hover(current_cell)
 		State.SELECT_ATTACK:
-			for cell in current_unit.get_attackable_cells():
+			if not highlights_enabled: return
+			for cell in attackable_cells:
 				highlight_layer.set_cell(cell, SOURCE_ID, ATLAS_COORDS_SELECTABLE)
 			handle_hover(current_cell)
 			set_move_sprite()
 		State.AWAIT_ACK:
+			if not highlights_enabled: return
 			highlight_layer.set_cell(selected_attack_cell, SOURCE_ID, ATLAS_COORDS_ATTACK)
 			set_move_sprite()
 	
@@ -110,13 +117,16 @@ func update_state(new_state: State) -> void:
 #endregion
 #region Signal handling
 
-func on_listen_for_move(unit: Unit) -> void:
+func on_listen_for_move(unit: Unit, _traversable_cells: Array[Vector2i]) -> void:
 	current_unit = unit
+	traversable_cells = _traversable_cells
+	highlights_enabled = current_unit.get_is_playable()
 	update_state(State.SELECT_MOVE)
 	
 
-func on_move_selected(cell: Vector2i) -> void:
+func on_move_selected(cell: Vector2i, _attackable_cells: Array[Vector2i]) -> void:
 	selected_move_cell = cell
+	attackable_cells = _attackable_cells
 	update_state(State.SELECT_ATTACK)
 	
 
@@ -148,18 +158,14 @@ func handle_hover(new_cell: Vector2i) -> void:
 	'''Apply appropriate highlight effects to cells based on mouse hover'''
 	var highlight: Vector2i
 	
-	if current_state == State.SELECT_MOVE:
-		var traverable_cells := current_unit.get_traversable_cells()
-		
+	if current_state == State.SELECT_MOVE:		
 		if cell_exists(current_cell):
-			highlight = ATLAS_COORDS_SELECTABLE if current_cell in traverable_cells else ATLAS_COORDS_NULL
+			highlight = ATLAS_COORDS_SELECTABLE if current_cell in traversable_cells else ATLAS_COORDS_NULL
 			highlight_layer.set_cell(current_cell, SOURCE_ID, highlight)
 		if cell_exists(new_cell):
-			highlight = ATLAS_COORDS_HOVER if new_cell in traverable_cells else ATLAS_COORDS_BLOCKED
+			highlight = ATLAS_COORDS_HOVER if new_cell in traversable_cells else ATLAS_COORDS_BLOCKED
 			highlight_layer.set_cell(new_cell, SOURCE_ID, highlight)
 	elif current_state == State.SELECT_ATTACK:
-		var attackable_cells := current_unit.get_attackable_cells()
-		
 		if cell_exists(current_cell) and current_cell != selected_move_cell:
 			highlight = ATLAS_COORDS_SELECTABLE if current_cell in attackable_cells else ATLAS_COORDS_NULL
 			highlight_layer.set_cell(current_cell, SOURCE_ID, highlight)
@@ -171,12 +177,12 @@ func handle_hover(new_cell: Vector2i) -> void:
 	
 
 func _process(delta: float) -> void:
-	var new_cell := Navigation.world_to_cell(get_global_mouse_position())
+	camera_shake.shake_if_active(delta)
 	
+	if not highlights_enabled: return
+	var new_cell := Navigation.world_to_cell(get_global_mouse_position())
 	if current_state in [State.SELECT_MOVE, State.SELECT_ATTACK] and new_cell != current_cell:
 		handle_hover(new_cell)
-	
-	camera_shake.shake_if_active(delta)
 	
 
 #endregion

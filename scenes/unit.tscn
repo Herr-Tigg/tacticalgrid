@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://bd5ijdwra1k1x"]
+[gd_scene load_steps=10 format=3 uid="uid://bd5ijdwra1k1x"]
 
 [ext_resource type="Script" uid="uid://cg1t5dnm8u50x" path="res://scripts/unit.gd" id="1_k673f"]
 [ext_resource type="Texture2D" uid="uid://bfgjkypd6kg54" path="res://assets/ui/healthbars16px.png" id="2_k673f"]
+[ext_resource type="Script" uid="uid://di6tyj5ex8cir" path="res://scripts/unit/state_machine/unit_state_machine.gd" id="3_1jvru"]
+[ext_resource type="Script" uid="uid://bwu2ni6tvvck4" path="res://scripts/unit/state_machine/waiting_state.gd" id="4_gic7v"]
+[ext_resource type="Script" uid="uid://dgs3whmmqrjwm" path="res://scripts/unit/state_machine/selection_state.gd" id="5_tb304"]
+[ext_resource type="Script" uid="uid://blryps6bwjia2" path="res://scripts/unit/state_machine/moving_state.gd" id="6_ruro2"]
+[ext_resource type="Script" uid="uid://bqdr1tfl87fhx" path="res://scripts/unit/state_machine/attacking_state.gd" id="7_e8hdl"]
+[ext_resource type="Script" uid="uid://ddd5mp3c6x5cv" path="res://scripts/unit/state_machine/turn_completed_state.gd" id="8_7gdr1"]
+[ext_resource type="Script" uid="uid://c0ph1uie6y8vf" path="res://scripts/unit/state_machine/knocked_out_state.gd" id="8_oee7j"]
 
 [node name="Unit" type="Node2D" node_paths=PackedStringArray("animated_sprite", "health_bar_sprite")]
 z_index = 10
@@ -26,3 +33,31 @@ texture = ExtResource("2_k673f")
 centered = false
 region_enabled = true
 region_rect = Rect2(17, 0, 14, 4)
+
+[node name="UnitStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_1jvru")
+initial_state = NodePath("WaitingState")
+
+[node name="WaitingState" type="Node" parent="UnitStateMachine"]
+script = ExtResource("4_gic7v")
+metadata/_custom_type_script = "uid://wucaeq755xd7"
+
+[node name="SelectionState" type="Node" parent="UnitStateMachine"]
+script = ExtResource("5_tb304")
+metadata/_custom_type_script = "uid://wucaeq755xd7"
+
+[node name="MovingState" type="Node" parent="UnitStateMachine"]
+script = ExtResource("6_ruro2")
+metadata/_custom_type_script = "uid://wucaeq755xd7"
+
+[node name="AttackingState" type="Node" parent="UnitStateMachine"]
+script = ExtResource("7_e8hdl")
+metadata/_custom_type_script = "uid://wucaeq755xd7"
+
+[node name="TurnCompletedState" type="Node" parent="UnitStateMachine"]
+script = ExtResource("8_7gdr1")
+metadata/_custom_type_script = "uid://wucaeq755xd7"
+
+[node name="KnockedOutState" type="Node" parent="UnitStateMachine"]
+script = ExtResource("8_oee7j")
+metadata/_custom_type_script = "uid://wucaeq755xd7"

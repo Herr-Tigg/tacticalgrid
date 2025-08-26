@@ -16,3 +16,8 @@ func get_units_by_faction(faction: UnitDefinition.Faction) -> Array[Unit]:
 	for unit in unit_container.units:
 		if unit.faction == faction: units.append(unit)
 	return units
+	
+func cell_to_unit(cell: Vector2i) -> Unit:
+	for unit in unit_container.units:
+		if unit.get_current_cell() == cell: return unit
+	return null

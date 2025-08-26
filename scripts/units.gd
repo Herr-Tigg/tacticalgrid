@@ -1,6 +1,6 @@
 class_name UnitsContainer extends Node2D
 
-enum State {SCHEDULING, ACTING}
+enum State {SCHEDULING, ACTING, ROUND_OVER, AWAITING_RESTART}
 
 const UNIT: PackedScene = preload("res://scenes/unit.tscn")
 
@@ -68,25 +68,24 @@ var current_state: State
 var turn_timer: Timer
 var units: Array[Unit]
 var turn_queue: TurnQueue
+var winner: UnitDefinition.Faction
 
 func _ready() -> void:
-	EventBus.selection_acknowledged.connect(on_selection_acknowledged)
-	EventBus.attack_ended.connect(on_attack_ended)
-	EventBus.turn_completed.connect(on_turn_completed)
-	
+	connect_round_signals()
 	current_state = State.SCHEDULING
 	turn_queue = TurnQueue.new()
 	
 
 func init(level_def: LevelDefinition, turn_timer_instance: Timer) -> void:
-	'''Level dependant initialisation'''
+	'''Level dependent initialisation'''
 	turn_timer = turn_timer_instance
 	turn_timer.one_shot = true
 	
-	for i in level_def.friendly_units.size():
-		spawn_unit(level_def.friendly_units[i], level_def.friendly_spawn_cells[i])
-	for i in level_def.opponent_units.size():
-		spawn_unit(level_def.opponent_units[i], level_def.opponent_spawn_cells[i])
+	for idx in level_def.friendly_units.size():
+		var is_playable := idx in level_def.playables
+		spawn_unit(level_def.friendly_units[idx], level_def.friendly_spawn_cells[idx], is_playable)
+	for idx in level_def.opponent_units.size():
+		spawn_unit(level_def.opponent_units[idx], level_def.opponent_spawn_cells[idx], false)
 	
 
 #region Signal handling
@@ -110,20 +109,36 @@ func on_turn_completed(unit: Unit) -> void:
 	current_state = State.SCHEDULING
 	
 
-func on_unit_dead(unit: Unit) -> void:
+func on_unit_defeated(unit: Unit) -> void:
 	units.erase(unit)
 	turn_queue.remove(unit)
 	unit.queue_free()
+	
+	check_round_state()
+	
+
+#endregion
+#region Input handling
+
+func _unhandled_input(event: InputEvent) -> void:
+	if current_state != State.AWAITING_RESTART: return
+	
+	if event.is_action_pressed("ui_accept"):
+		EventBus.start_new_round.emit()
 	
 
 #endregion
 #region Frame dependant logic
 
 func _process(_delta: float) -> void:
-	if current_state != State.SCHEDULING: return
-	# We call next_turn in _process to allow all end of turn signals
-	# to finish before starting a new turn
-	next_turn()
+	match current_state:
+		State.SCHEDULING:
+			# We call next_turn in _process to allow all end of turn signals
+			# to finish before starting a new turn
+			next_turn()
+		State.ROUND_OVER:
+			EventBus.round_over.emit(winner)
+			current_state = State.AWAITING_RESTART
 	
 
 #endregion
@@ -139,14 +154,27 @@ func start_round() -> void:
 #endregion
 #region Helper functions
 
-func spawn_unit(unit_def: UnitDefinition, cell: Vector2i) -> void:
+func connect_round_signals() -> void:
+	EventBus.selection_acknowledged.connect(on_selection_acknowledged)
+	EventBus.attack_ended.connect(on_attack_ended)
+	EventBus.turn_completed.connect(on_turn_completed)
+	EventBus.unit_defeated.connect(on_unit_defeated)
+	
+
+func disconnect_round_signals() -> void:
+	EventBus.selection_acknowledged.disconnect(on_selection_acknowledged)
+	EventBus.attack_ended.disconnect(on_attack_ended)
+	EventBus.turn_completed.disconnect(on_turn_completed)
+	EventBus.unit_defeated.disconnect(on_unit_defeated)
+	
+
+func spawn_unit(unit_def: UnitDefinition, cell: Vector2i, is_playable: bool) -> void:
 	'''Instantiate a particular unit at a particular cell'''
 	for unit in units:
 		assert(cell != unit.get_current_cell(), "Cannot spawn units on same cell: " + str(cell))
 	
 	var new_unit = UNIT.instantiate()
-	new_unit.init(cell, unit_def, turn_timer)
-	new_unit.unit_dead.connect(on_unit_dead)
+	new_unit.init(cell, unit_def, is_playable, turn_timer)
 	units.append(new_unit)
 	add_child(new_unit)
 	
@@ -157,6 +185,27 @@ func next_turn() -> void:
 	current_state = State.ACTING
 	turn_timer.start(turn_time_seconds)
 	next_unit.start_turn()
+	
+
+func check_round_state() -> void:
+	var friendly: UnitDefinition.Faction = UnitDefinition.Faction.FRIENDLY
+	var enemy: UnitDefinition.Faction = UnitDefinition.Faction.ENEMY
+	var units_per_faction: Dictionary[UnitDefinition.Faction, int] = {
+		friendly: 0,
+		enemy: 0,
+	}
+	
+	for unit in units:
+		units_per_faction[unit.faction] += 1
+	
+	if 0 not in units_per_faction.values(): return
+	
+	if units_per_faction[friendly] == 0: winner = enemy
+	# TODO: Add enemy wave logic
+	else: winner = friendly
+	
+	disconnect_round_signals()
+	current_state = State.ROUND_OVER
 	
 
 #endregion

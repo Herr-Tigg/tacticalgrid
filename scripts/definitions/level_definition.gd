@@ -4,6 +4,7 @@ class_name LevelDefinition extends Resource
 @export var map_to_load: PackedScene
 
 @export_category("Friendly units")
+@export var playables: Array[int] = [0] # First friendly is playable by default
 @export var friendly_units: Array[UnitDefinition]
 @export var friendly_spawn_cells: Array[Vector2i]
 

@@ -61,3 +61,35 @@ func get_selectable_cells(
 	
 	return selectable_cells
 	
+
+#region AI logic
+
+func get_shortest_path(
+	from: Vector2i,
+	to: Vector2i,
+	excluded_blocked_cells: Array[Vector2i] = [],
+) -> Array[Vector2i]:
+	'''Use Astar to get the shortest path between two cells'''
+	var shortest_path: Array[Vector2i] = []
+	var unit_cells: Array[Vector2i] = GlobalData.get_unit_cells()
+	
+	var from_id: int = astar.get_closest_point(from, true)
+	var to_id: int = astar.get_closest_point(to, true)
+	
+	var blocked_ids: Array[int] = []
+	for cell in unit_cells:
+		if cell in excluded_blocked_cells: continue
+		var blocked_id: int = astar.get_closest_point(cell, true)
+		blocked_ids.append(blocked_id)
+		astar.set_point_disabled(blocked_id, true)
+	
+	var shortest_id_path := astar.get_id_path(from_id, to_id, false)
+	for id in shortest_id_path:
+		shortest_path.append(Vector2i(astar.get_point_position(id)))
+	
+	for id in blocked_ids:
+		astar.set_point_disabled(id, false)
+	
+	return shortest_path
+
+#endregion

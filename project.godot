@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="Tacticalgrid"
-run/main_scene="uid://cuo4ypjlcehm3"
+run/main_scene="uid://dtgelolbupmo7"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-EventBus="*res://scripts/event_bus.gd"
-Navigation="*res://scripts/navigation.gd"
-GlobalData="*res://scripts/global_data.gd"
+EventBus="*res://scripts/autoloads/event_bus.gd"
+Navigation="*res://scripts/autoloads/navigation.gd"
+GlobalData="*res://scripts/autoloads/global_data.gd"
 
 [editor]
 
