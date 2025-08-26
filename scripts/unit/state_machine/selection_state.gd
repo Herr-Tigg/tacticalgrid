@@ -144,6 +144,7 @@ func calculate_action_costs() -> void:
 		calculated_actions.append({
 			"move_cell": move_cell,
 			"attack_cell": null,
+			"path": move["path"],
 			"cost": move_cost,
 		})
 		
@@ -162,6 +163,7 @@ func calculate_action_costs() -> void:
 			calculated_actions.append({
 				"move_cell": move_cell,
 				"attack_cell": attack_cell,
+				"path": move["path"],
 				"cost": move_cost + attack_cost,
 			})
 			

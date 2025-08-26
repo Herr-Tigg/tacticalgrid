@@ -78,12 +78,12 @@ func get_shortest_path(
 	
 	var blocked_ids: Array[int] = []
 	for cell in unit_cells:
-		if cell in excluded_blocked_cells: continue
+		if cell in excluded_blocked_cells or cell == to: continue
 		var blocked_id: int = astar.get_closest_point(cell, true)
 		blocked_ids.append(blocked_id)
 		astar.set_point_disabled(blocked_id, true)
 	
-	var shortest_id_path := astar.get_id_path(from_id, to_id, false)
+	var shortest_id_path := astar.get_id_path(from_id, to_id, true)
 	for id in shortest_id_path:
 		shortest_path.append(Vector2i(astar.get_point_position(id)))
 	

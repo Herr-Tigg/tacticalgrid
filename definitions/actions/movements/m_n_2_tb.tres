@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ActionDefinition" load_steps=2 format=3 uid="uid://dq74wh0hdybv7"]
+
+[ext_resource type="Script" uid="uid://df3hwh3mqg4sm" path="res://scripts/definitions/action_definition.gd" id="1_6p13m"]
+
+[resource]
+script = ExtResource("1_6p13m")
+type = 0
+mode = 0
+path = Array[Vector2i]([Vector2i(0, -1), Vector2i(0, -2)])
+metadata/_custom_type_script = "uid://df3hwh3mqg4sm"

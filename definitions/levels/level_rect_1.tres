@@ -1,17 +1,18 @@
-[gd_resource type="Resource" script_class="LevelDefinition" load_steps=6 format=3 uid="uid://fhorrmywblux"]
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=7 format=3 uid="uid://fhorrmywblux"]
 
 [ext_resource type="Script" uid="uid://qhju30ovreiy" path="res://scripts/definitions/unit_definition.gd" id="1_dqtuo"]
 [ext_resource type="Resource" uid="uid://b8nq1qg4be60h" path="res://definitions/units/friendly_normal.tres" id="2_q5pt3"]
 [ext_resource type="PackedScene" uid="uid://cjpryeq0xlpgr" path="res://scenes/maps/map_small_rect.tscn" id="3_i0g8l"]
 [ext_resource type="Resource" uid="uid://d0kwwp31ll67" path="res://definitions/units/enemy_normal.tres" id="4_s4vao"]
+[ext_resource type="Resource" uid="uid://ctcaccl5ar1fw" path="res://definitions/units/enemy_heavy.tres" id="5_q5pt3"]
 [ext_resource type="Script" uid="uid://bxpn3ws07q07r" path="res://scripts/definitions/level_definition.gd" id="5_sidqn"]
 
 [resource]
 script = ExtResource("5_sidqn")
 map_to_load = ExtResource("3_i0g8l")
 playables = Array[int]([0])
-friendly_units = Array[ExtResource("1_dqtuo")]([ExtResource("2_q5pt3")])
-friendly_spawn_cells = Array[Vector2i]([Vector2i(-2, -1)])
-opponent_units = Array[ExtResource("1_dqtuo")]([ExtResource("4_s4vao")])
-opponent_spawn_cells = Array[Vector2i]([Vector2i(2, -1)])
+friendly_units = Array[ExtResource("1_dqtuo")]([ExtResource("2_q5pt3"), ExtResource("2_q5pt3")])
+friendly_spawn_cells = Array[Vector2i]([Vector2i(-6, -2), Vector2i(-6, 1)])
+opponent_units = Array[ExtResource("1_dqtuo")]([ExtResource("4_s4vao"), ExtResource("5_q5pt3")])
+opponent_spawn_cells = Array[Vector2i]([Vector2i(5, -2), Vector2i(5, 1)])
 metadata/_custom_type_script = "uid://bxpn3ws07q07r"
