@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://c1i7n7aebuxf8"]
+
+[ext_resource type="Texture2D" uid="uid://dntynlpnb2b0e" path="res://assets/ShriekerMushroom.png" id="1_0kc68"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ex1hp"]
+atlas = ExtResource("1_0kc68")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mi0sc"]
+atlas = ExtResource("1_0kc68")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0773"]
+atlas = ExtResource("1_0kc68")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ldpcl"]
+atlas = ExtResource("1_0kc68")
+region = Rect2(48, 0, 16, 16)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ex1hp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mi0sc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k0773")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ldpcl")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]

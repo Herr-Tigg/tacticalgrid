@@ -9,15 +9,15 @@ var cost_kill: float = -3.0
 var traversable_cells: Array[Vector2i]
 var move_selected: bool
 var selected_move_cell: Vector2i
-var attackable_cells: Array[Vector2i]
-var attack_selected: bool
-var selected_attack_cell: Vector2i
+var actionable_cells: Array[Vector2i]
+var action_selected: bool
+var selected_action_cell: Vector2i
 
 func enter(_previous_state_path: String, _data: Dictionary = {}) -> void:
 	traversable_cells = []
-	attackable_cells = []
+	actionable_cells = []
 	move_selected = false
-	attack_selected = false
+	action_selected = false
 	
 	unit.turn_timer.timeout.connect(on_turn_timeout)
 	
@@ -42,7 +42,7 @@ func handle_input(event: InputEvent) -> void:
 	
 
 func on_turn_timeout() -> void:
-	'''Perform the selected move and attack if any, when timer runs out'''
+	'''Perform the selected move and action if any, when timer runs out'''
 	transition_to_next_state()
 	
 
@@ -53,16 +53,27 @@ func transition_to_next_state() -> void:
 	finished.emit(next_state_path, {
 		"move_selected": move_selected,
 		"selected_move_cell": selected_move_cell,
-		"attack_selected": attack_selected,
-		"selected_attack_cell": selected_attack_cell,
+		"action_selected": action_selected,
+		"selected_action_cell": selected_action_cell,
 	})
+	
+
+func is_actionable_cell(target_unit: Unit) -> bool:
+	if target_unit.faction != unit.faction: return true
+	
+	if unit.healing_enabled \
+	and target_unit.faction == unit.faction \
+	and target_unit.current_health < target_unit.max_health:
+		return true
+	
+	return false
 	
 
 #region Player logic
 
 func handle_input_select() -> void:
 	'''Select a cell for which to apply the current action'''
-	if move_selected and attack_selected: return
+	if move_selected and action_selected: return
 	
 	var target_cell := Navigation.world_to_cell(owner.get_global_mouse_position())
 	if not move_selected:
@@ -70,31 +81,34 @@ func handle_input_select() -> void:
 		move_selected = true
 		selected_move_cell = target_cell
 		
-		var opposing_units := GlobalData.get_units_by_faction(unit.opposing_faction)
+		var target_units := GlobalData.get_units()
 		var selectable_cells := Navigation.get_selectable_cells(
 			unit.attack_patterns,
 			selected_move_cell,
 			[unit.current_cell],
 		)
 		
-		attackable_cells = []
-		for opposing_unit in opposing_units:
-			var cell: Vector2i = opposing_unit.current_cell
-			if cell in selectable_cells: attackable_cells.append(cell)
+		actionable_cells = []
+		for target_unit in target_units:
+			if target_unit == unit: continue
+			if not is_actionable_cell(target_unit): continue
+			
+			var cell: Vector2i = target_unit.current_cell
+			if cell in selectable_cells: actionable_cells.append(cell)
 		
-		EventBus.move_selected.emit(selected_move_cell, attackable_cells)
-	elif not attack_selected:
-		if not target_cell in attackable_cells: return
-		attack_selected = true
-		selected_attack_cell = target_cell
-		EventBus.attack_selected.emit(selected_attack_cell)
+		EventBus.move_selected.emit(selected_move_cell, actionable_cells)
+	elif not action_selected:
+		if not target_cell in actionable_cells: return
+		action_selected = true
+		selected_action_cell = target_cell
+		EventBus.attack_selected.emit(selected_action_cell)
 	
 
 func handle_input_cancel() -> void:
 	'''Cancel and return to the previous action'''
-	if attack_selected:
-		attack_selected = false
-		EventBus.move_selected.emit(selected_move_cell, attackable_cells)
+	if action_selected:
+		action_selected = false
+		EventBus.move_selected.emit(selected_move_cell, actionable_cells)
 	elif move_selected:
 		move_selected = false
 		EventBus.listen_for_move_input.emit(unit, traversable_cells)
@@ -111,7 +125,7 @@ func handle_input_ack_selection() -> void:
 func calculate_action_costs() -> void:
 	var opposing_faction := unit.opposing_faction
 	var movements := unit.movements
-	var attacks := unit.attack_patterns
+	var actions := unit.attack_patterns
 	var source_cell := unit.current_cell
 	var damage := unit.damage
 	
@@ -148,23 +162,23 @@ func calculate_action_costs() -> void:
 			"cost": move_cost,
 		})
 		
-		attackable_cells = Navigation.get_selectable_cells(
-			attacks,
+		actionable_cells = Navigation.get_selectable_cells(
+			actions,
 			move_cell,
 			[source_cell],
 		)
 		
 		for opposing_unit in opposing_units:
-			var attack_cell: Vector2i = opposing_unit.get_current_cell()
-			if attack_cell not in attackable_cells: continue
+			var action_cell: Vector2i = opposing_unit.get_current_cell()
+			if action_cell not in actionable_cells: continue
 			
 			var is_kill: bool = opposing_unit.get_current_health() <= damage
-			var attack_cost: float = cost_kill if is_kill else cost_attack
+			var action_cost: float = cost_kill if is_kill else cost_attack
 			calculated_actions.append({
 				"move_cell": move_cell,
-				"attack_cell": attack_cell,
+				"action_cell": action_cell,
 				"path": move["path"],
-				"cost": move_cost + attack_cost,
+				"cost": move_cost + action_cost,
 			})
 			
 	var cheapest_action: Dictionary = {"cost": 10000}
@@ -175,9 +189,9 @@ func calculate_action_costs() -> void:
 	if "move_cell" in cheapest_action:
 		move_selected = true
 		selected_move_cell = cheapest_action["move_cell"]
-	if "attack_cell" in cheapest_action and cheapest_action["attack_cell"] != null:
-		attack_selected = true
-		selected_attack_cell = cheapest_action["attack_cell"]
+	if "action_cell" in cheapest_action and cheapest_action["action_cell"] != null:
+		action_selected = true
+		selected_action_cell = cheapest_action["action_cell"]
 	
 
 #endregion

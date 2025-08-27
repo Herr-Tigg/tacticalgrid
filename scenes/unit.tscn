@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://bwu2ni6tvvck4" path="res://scripts/unit/state_machine/waiting_state.gd" id="4_gic7v"]
 [ext_resource type="Script" uid="uid://dgs3whmmqrjwm" path="res://scripts/unit/state_machine/selection_state.gd" id="5_tb304"]
 [ext_resource type="Script" uid="uid://blryps6bwjia2" path="res://scripts/unit/state_machine/moving_state.gd" id="6_ruro2"]
-[ext_resource type="Script" uid="uid://bqdr1tfl87fhx" path="res://scripts/unit/state_machine/attacking_state.gd" id="7_e8hdl"]
+[ext_resource type="Script" uid="uid://bqdr1tfl87fhx" path="res://scripts/unit/state_machine/action_state.gd" id="7_e8hdl"]
 [ext_resource type="Script" uid="uid://ddd5mp3c6x5cv" path="res://scripts/unit/state_machine/turn_completed_state.gd" id="8_7gdr1"]
 [ext_resource type="Script" uid="uid://c0ph1uie6y8vf" path="res://scripts/unit/state_machine/knocked_out_state.gd" id="8_oee7j"]
 
@@ -50,7 +50,7 @@ metadata/_custom_type_script = "uid://wucaeq755xd7"
 script = ExtResource("6_ruro2")
 metadata/_custom_type_script = "uid://wucaeq755xd7"
 
-[node name="AttackingState" type="Node" parent="UnitStateMachine"]
+[node name="ActionState" type="Node" parent="UnitStateMachine"]
 script = ExtResource("7_e8hdl")
 metadata/_custom_type_script = "uid://wucaeq755xd7"
 

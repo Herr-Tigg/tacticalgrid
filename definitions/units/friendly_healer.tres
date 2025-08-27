@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="UnitDefinition" load_steps=21 format=3 uid="uid://chrnvmm2cq2n4"]
+
+[ext_resource type="Script" uid="uid://df3hwh3mqg4sm" path="res://scripts/definitions/action_definition.gd" id="1_4x8pv"]
+[ext_resource type="Script" uid="uid://qhju30ovreiy" path="res://scripts/definitions/unit_definition.gd" id="2_pkp5c"]
+[ext_resource type="Resource" uid="uid://baru3k83r7djs" path="res://definitions/actions/attacks/a_e_3_ta.tres" id="2_yh75j"]
+[ext_resource type="Resource" uid="uid://8njuwsxli0l" path="res://definitions/actions/attacks/a_n_3_ta.tres" id="3_mceya"]
+[ext_resource type="Resource" uid="uid://drmhfs7euille" path="res://definitions/actions/attacks/a_s_3_ta.tres" id="4_wlmd8"]
+[ext_resource type="Resource" uid="uid://ce6jvbvampist" path="res://definitions/actions/attacks/a_w_3_ta.tres" id="5_sam0m"]
+[ext_resource type="Resource" uid="uid://chu7had17aetb" path="res://definitions/actions/movements/m_e_3_tb.tres" id="6_hmdy4"]
+[ext_resource type="Resource" uid="uid://bgnllquw4nww" path="res://definitions/actions/movements/m_n_3_tb.tres" id="7_dwfmn"]
+[ext_resource type="Resource" uid="uid://ow1v0guxkjv5" path="res://definitions/actions/movements/m_s_3_tb.tres" id="8_6puur"]
+[ext_resource type="Resource" uid="uid://bqfe6sb7eshk4" path="res://definitions/actions/movements/m_w_3_tb.tres" id="9_uuj1t"]
+[ext_resource type="Resource" uid="uid://qkq703pirmal" path="res://definitions/actions/movements/m_1.tres" id="10_wlmd8"]
+[ext_resource type="Resource" uid="uid://c7cm321t0mc4a" path="res://definitions/actions/movements/m_neh_2_tb.tres" id="11_kdncl"]
+[ext_resource type="SpriteFrames" uid="uid://c1i7n7aebuxf8" path="res://animations/shriekermushroom.tres" id="11_mceya"]
+[ext_resource type="Resource" uid="uid://dbvei41348ttt" path="res://definitions/actions/movements/m_nwh_2_tb.tres" id="12_bq521"]
+[ext_resource type="Resource" uid="uid://wspmmfnquncy" path="res://definitions/actions/movements/m_seh_2_tb.tres" id="13_1j3iu"]
+[ext_resource type="Resource" uid="uid://cnfvkwvr836mu" path="res://definitions/actions/movements/m_swh_2_tb.tres" id="14_owbg5"]
+[ext_resource type="Resource" uid="uid://bh0xouxf6xs1l" path="res://definitions/actions/movements/m_nev_2_tb.tres" id="15_6c0j6"]
+[ext_resource type="Resource" uid="uid://dilql5t7j0uxq" path="res://definitions/actions/movements/m_nwv_2_tb.tres" id="16_8kuf8"]
+[ext_resource type="Resource" uid="uid://ds60cm3rkfsad" path="res://definitions/actions/movements/m_sev_2_tb.tres" id="17_m6ogv"]
+[ext_resource type="Resource" uid="uid://d16mapo6qb2pw" path="res://definitions/actions/movements/m_swv_2_tb.tres" id="18_44e10"]
+
+[resource]
+script = ExtResource("2_pkp5c")
+faction = 0
+sprite_frames = ExtResource("11_mceya")
+max_health = 60
+speed = 100
+movements = Array[ExtResource("1_4x8pv")]([ExtResource("6_hmdy4"), ExtResource("7_dwfmn"), ExtResource("8_6puur"), ExtResource("9_uuj1t"), ExtResource("10_wlmd8"), ExtResource("11_kdncl"), ExtResource("13_1j3iu"), ExtResource("14_owbg5"), ExtResource("15_6c0j6"), ExtResource("17_m6ogv"), ExtResource("18_44e10"), ExtResource("12_bq521"), ExtResource("16_8kuf8")])
+damage = 15
+attack_patterns = Array[ExtResource("1_4x8pv")]([ExtResource("2_yh75j"), ExtResource("3_mceya"), ExtResource("4_wlmd8"), ExtResource("5_sam0m")])
+healing_strength = 20
+healing_enabled = true
+metadata/_custom_type_script = "uid://qhju30ovreiy"

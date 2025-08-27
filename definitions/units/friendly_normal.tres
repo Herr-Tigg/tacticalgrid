@@ -20,10 +20,12 @@
 [resource]
 script = ExtResource("2_kvmi7")
 faction = 0
+sprite_frames = ExtResource("11_janb8")
 max_health = 100
 speed = 75
-damage = 25
 movements = Array[ExtResource("1_vwpdh")]([ExtResource("6_avtxw"), ExtResource("7_mj7sr"), ExtResource("8_k2fx6"), ExtResource("9_883jf"), ExtResource("10_w3em6"), ExtResource("11_57cjp"), ExtResource("12_0hw2s"), ExtResource("13_fexbu"), ExtResource("14_ayufn")])
+damage = 25
 attack_patterns = Array[ExtResource("1_vwpdh")]([ExtResource("2_ttvkl"), ExtResource("3_781ui"), ExtResource("4_eou7l"), ExtResource("5_x8tcr")])
-sprite_frames = ExtResource("11_janb8")
+actions = Array[int]([0])
+healing_strength = 0
 metadata/_custom_type_script = "uid://qhju30ovreiy"

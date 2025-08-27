@@ -1,6 +1,6 @@
 class_name MapEffects extends Node2D
 
-enum State {WAITING, SELECT_MOVE, SELECT_ATTACK, AWAIT_ACK}
+enum State {WAITING, SELECT_MOVE, SELECT_ACTION, AWAIT_ACK}
 
 const SOURCE_ID := 0
 const ATLAS_COORDS_NULL := Vector2i(0, 0)
@@ -56,17 +56,17 @@ var current_cell: Vector2i = Vector2i(INF, INF)
 var current_unit: Unit
 
 var traversable_cells: Array[Vector2i] = []
-var attackable_cells: Array[Vector2i] = []
+var actionable_cells: Array[Vector2i] = []
 var selected_move_cell: Vector2i
-var selected_attack_cell: Vector2i
+var selected_action_cell: Vector2i
 
 func _ready() -> void:
 	EventBus.listen_for_move_input.connect(on_listen_for_move)
 	EventBus.move_selected.connect(on_move_selected)
-	EventBus.attack_selected.connect(on_attack_selected)
+	EventBus.attack_selected.connect(on_action_selected)
 	EventBus.selection_acknowledged.connect(on_selection_acknowledged)
-	EventBus.attack_started.connect(on_attack_started)
-	EventBus.attack_ended.connect(on_attack_ended)
+	EventBus.action_started.connect(on_action_started)
+	EventBus.action_ended.connect(on_action_ended)
 	EventBus.turn_completed.connect(on_turn_completed)
 	
 	move_indicator_sprite = Sprite2D.new()
@@ -102,15 +102,15 @@ func update_state(new_state: State) -> void:
 			for cell in traversable_cells:
 				highlight_layer.set_cell(cell, SOURCE_ID, ATLAS_COORDS_SELECTABLE)
 			handle_hover(current_cell)
-		State.SELECT_ATTACK:
+		State.SELECT_ACTION:
 			if not highlights_enabled: return
-			for cell in attackable_cells:
+			for cell in actionable_cells:
 				highlight_layer.set_cell(cell, SOURCE_ID, ATLAS_COORDS_SELECTABLE)
 			handle_hover(current_cell)
 			set_move_sprite()
 		State.AWAIT_ACK:
 			if not highlights_enabled: return
-			highlight_layer.set_cell(selected_attack_cell, SOURCE_ID, ATLAS_COORDS_ATTACK)
+			highlight_layer.set_cell(selected_action_cell, SOURCE_ID, ATLAS_COORDS_ATTACK)
 			set_move_sprite()
 	
 
@@ -126,12 +126,12 @@ func on_listen_for_move(unit: Unit, _traversable_cells: Array[Vector2i]) -> void
 
 func on_move_selected(cell: Vector2i, _attackable_cells: Array[Vector2i]) -> void:
 	selected_move_cell = cell
-	attackable_cells = _attackable_cells
-	update_state(State.SELECT_ATTACK)
+	actionable_cells = _attackable_cells
+	update_state(State.SELECT_ACTION)
 	
 
-func on_attack_selected(cell: Vector2i) -> void:
-	selected_attack_cell = cell
+func on_action_selected(cell: Vector2i) -> void:
+	selected_action_cell = cell
 	update_state(State.AWAIT_ACK)
 	
 
@@ -139,12 +139,18 @@ func on_selection_acknowledged() -> void:
 	update_state(State.WAITING)
 	
 
-func on_attack_started() -> void:
-	camera_shake.start()
+func on_action_started(type: GlobalData.ActionType) -> void:
+	if type == GlobalData.ActionType.ATTACK:
+		camera_shake.start()
 	
 
-func on_attack_ended(_attacker: Unit, _target_cell: Vector2i) -> void:
-	camera_shake.end()
+func on_action_ended(
+	type: GlobalData.ActionType,
+	_attacker: Unit,
+	_target_cell: Vector2i,
+) -> void:
+	if type == GlobalData.ActionType.ATTACK:
+		camera_shake.end()
 	
 
 func on_turn_completed(_unit: Unit) -> void:
@@ -165,12 +171,12 @@ func handle_hover(new_cell: Vector2i) -> void:
 		if cell_exists(new_cell):
 			highlight = ATLAS_COORDS_HOVER if new_cell in traversable_cells else ATLAS_COORDS_BLOCKED
 			highlight_layer.set_cell(new_cell, SOURCE_ID, highlight)
-	elif current_state == State.SELECT_ATTACK:
+	elif current_state == State.SELECT_ACTION:
 		if cell_exists(current_cell) and current_cell != selected_move_cell:
-			highlight = ATLAS_COORDS_SELECTABLE if current_cell in attackable_cells else ATLAS_COORDS_NULL
+			highlight = ATLAS_COORDS_SELECTABLE if current_cell in actionable_cells else ATLAS_COORDS_NULL
 			highlight_layer.set_cell(current_cell, SOURCE_ID, highlight)
 		if cell_exists(new_cell) and new_cell != selected_move_cell:
-			highlight = ATLAS_COORDS_HOVER if new_cell in attackable_cells else ATLAS_COORDS_BLOCKED
+			highlight = ATLAS_COORDS_HOVER if new_cell in actionable_cells else ATLAS_COORDS_BLOCKED
 			highlight_layer.set_cell(new_cell, SOURCE_ID, highlight)
 		
 	current_cell = new_cell
@@ -181,7 +187,7 @@ func _process(delta: float) -> void:
 	
 	if not highlights_enabled: return
 	var new_cell := Navigation.world_to_cell(get_global_mouse_position())
-	if current_state in [State.SELECT_MOVE, State.SELECT_ATTACK] and new_cell != current_cell:
+	if current_state in [State.SELECT_MOVE, State.SELECT_ACTION] and new_cell != current_cell:
 		handle_hover(new_cell)
 	
 

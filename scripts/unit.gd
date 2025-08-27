@@ -20,12 +20,14 @@ const HEALTH_SPRITE_DATA: Dictionary[String, float] = {
 
 # User definition
 var faction: UnitDefinition.Faction
+var sprite_frames: SpriteFrames
 var max_health: int
 var speed: int
-var damage: int
 var movements: Array[ActionDefinition]
+var damage: int
 var attack_patterns: Array[ActionDefinition]
-var sprite_frames: SpriteFrames
+var healing_strength: int
+var healing_enabled: bool
 
 var is_playable: bool
 var turn_timer: Timer
@@ -46,12 +48,14 @@ func init(
 	_turn_timer: Timer,
 ) -> void:
 	faction = unit_def.faction
+	sprite_frames = unit_def.sprite_frames
 	max_health = unit_def.max_health
 	speed = unit_def.speed
-	damage = unit_def.damage
 	movements = unit_def.movements
+	damage = unit_def.damage
 	attack_patterns = unit_def.attack_patterns
-	sprite_frames = unit_def.sprite_frames
+	healing_strength = unit_def.healing_strength
+	healing_enabled= unit_def.healing_enabled
 	
 	turn_timer = _turn_timer
 	is_playable = is_playable_unit
@@ -67,17 +71,7 @@ func init(
 	animated_sprite.play("idle")
 	
 
-#region Public functions
-
-func start_turn() -> void:
-	'''Start the unit's turn by transitioning out of the waiting state'''
-	turn_started.emit()
-	
-
-func take_damage(inflicted_damage: int) -> void:
-	'''Register damage inflicted by an opponent'''
-	current_health = clampi(current_health - inflicted_damage, 0, 255)
-	
+func update_health_bar() -> void:
 	health_bar_sprite.region_rect.size.x = clamp(
 		HEALTH_SPRITE_DATA["width"] * current_health / float(max_health),
 		0.0,
@@ -91,7 +85,24 @@ func take_damage(inflicted_damage: int) -> void:
 	else:
 		health_bar_sprite.region_rect.position.x = HEALTH_SPRITE_DATA["high_x"]
 	
+
+#region Public functions
+
+func start_turn() -> void:
+	'''Start the unit's turn by transitioning out of the waiting state'''
+	turn_started.emit()
+	
+
+func take_damage(inflicted_damage: int) -> void:
+	'''Register damage inflicted by an opponent'''
+	current_health = clampi(current_health - inflicted_damage, 0, 255)
+	update_health_bar()
 	if current_health <= 0.0: knocked_out.emit()
+	
+
+func receive_heal(applied_healing_strength: int) -> void:
+	current_health = clampi(current_health + applied_healing_strength, 0, max_health)
+	update_health_bar()
 	
 
 func get_is_playable() -> bool:
@@ -105,6 +116,7 @@ func get_speed() -> int:
 
 func get_damage() -> int:
 	return damage
+	
 
 func get_current_health() -> int:
 	return current_health

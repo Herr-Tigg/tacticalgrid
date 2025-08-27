@@ -95,12 +95,18 @@ func on_selection_acknowledged() -> void:
 	turn_timer.stop()
 	
 
-func on_attack_ended(attacker: Unit, target_cell: Vector2i) -> void:
+func on_action_ended(
+	type: GlobalData.ActionType,
+	actor: Unit,
+	target_cell: Vector2i,
+) -> void:
 	'''A unit has attacked another at a particular cell'''
-	for unit in units:
-		if unit.get_current_cell() == target_cell:
-			unit.take_damage(attacker.damage)
-			return
+	var target_unit: Unit = GlobalData.cell_to_unit(target_cell)
+	if type == GlobalData.ActionType.ATTACK:
+		target_unit.take_damage(actor.damage)
+		return
+	if type == GlobalData.ActionType.HEAL:
+		target_unit.receive_heal(actor.healing_strength)
 	
 
 func on_turn_completed(unit: Unit) -> void:
@@ -156,14 +162,14 @@ func start_round() -> void:
 
 func connect_round_signals() -> void:
 	EventBus.selection_acknowledged.connect(on_selection_acknowledged)
-	EventBus.attack_ended.connect(on_attack_ended)
+	EventBus.action_ended.connect(on_action_ended)
 	EventBus.turn_completed.connect(on_turn_completed)
 	EventBus.unit_defeated.connect(on_unit_defeated)
 	
 
 func disconnect_round_signals() -> void:
 	EventBus.selection_acknowledged.disconnect(on_selection_acknowledged)
-	EventBus.attack_ended.disconnect(on_attack_ended)
+	EventBus.action_ended.disconnect(on_action_ended)
 	EventBus.turn_completed.disconnect(on_turn_completed)
 	EventBus.unit_defeated.disconnect(on_unit_defeated)
 	
